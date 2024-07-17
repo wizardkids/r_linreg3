@@ -4,20 +4,12 @@
         Date: 2024-07-16
  Description:
 
-
-    !HELP & INFORMATION ABOUT STATISTICS
-
-    !    details about definitions and methods of calculation are maintained in separate dictionaries
-
-    !    >>> definitions("x_bar")
-    !    >>> calculations("x_bar")
-
-    !    >>> help()
-    !            Help returns information about how to use the program, including details about each function that the user has access to.
-
 """
 
-description = {
+from typing import Any
+from typing import OrderedDict as ODictType
+
+DESCRIPTIONS: dict[str, str] = {
     "model_results": "statsmodels model_results; since this variable holds the statsmodels result for model.fit(), any method from statsmodels can be applied to this variable\nExample -- results['model_results'][0].summary()",
     "x_variable_names": "names of variables in the X dataset",
     "y_variable_name": "name of the y variable",
@@ -72,7 +64,7 @@ description = {
 }
 
 
-calculations = {
+CALCULATIONS: dict[str, str] = {
     "model_results": "model.fit()",
     "x_variable_names": "x_variable names",
     "y_variable_name": "y variable name",
@@ -84,8 +76,8 @@ calculations = {
     "sumxy": "sum(xi * yi)",
     "sumx2": "sum((xi^2))",
     "sumy2": "sum((yi)^2)",
-    "x_bar": "sum(xi))/n or np.mean(x)",
-    "y_bar": "(sum(yi))/n or np.mean(y)",
+    "x_bar": "sum(xi)/n or np.mean(x)",
+    "y_bar": "sum(yi)/n or np.mean(y)",
     "SXX": "sum((xi - x_bar)^2)",
     "SYY": "sum((yi - y_bar)^2)",
     "SXY": "sum((xi - x_bar) * (yi - y_bar))",
@@ -127,6 +119,102 @@ calculations = {
 }
 
 
+def print_vars() -> None:
+    """
+    Print to the terminal a list of all variables exposed in the "results" dictionary. The list is organized with headings to make it slightly easier to find a particular variable.
+    """
+
+    section = 0
+    for k, v in DESCRIPTIONS.items():
+        # Insert headings at the appropriate places.
+        match k:
+            case 'x_variable_names':
+                if section in [0, 1]:
+                    print("\nDATA")
+                    print("-" * 32)
+            case 'sumx':
+                if section in [0, 2]:
+                    print("\nUNDERLYING STATISTICS")
+                    print("-" * 32)
+            case 'anova':
+                if section in [0, 3]:
+                    print("\nREGRESSION MODEL")
+                    print("-" * 32)
+            case 'SS_model':
+                if section in [0, 4]:
+                    print("\nMODEL FIT STATISTICS")
+                    print("-" * 32)
+            case 'corr_matrix':
+                if section in [0, 5]:
+                    print("\nADDITIONAL INFORMATION")
+                    print("-" * 32)
+
+        # Print the variable name.
+        print(k, sep='')
+
+    return None
+
+
+def var_info(results: ODictType[str, Any], variable_name: str = "", all_rows: bool = False) -> None:
+    """
+    Print detailed information about a single variable. This includes the variable name, its value computed for this regression, a description, and the method of calculation or source of the variable's quantity. For variables that hold DataFrames, include an option to print the whole data set or just the first few rows.
+
+    Parameters
+    ----------
+    results : Dict[str, Any] -- results of linear regression
+    variable_name : str, optional -- name of the variable to get information about, by default ""
+    print_all_rows : bool, optional -- if True, print all rows for variables that are dataframes, by default False
+    """
+
+    if variable_name == "":
+        print("Variable name missing.")
+        print_variables()
+        print()
+        return
+
+    if variable_name not in results:
+        print(f'"{variable_name}" not found in results.')
+        print_variables()
+        print()
+        return
+
+    result = results[variable_name]
+
+    print(f"\nRESULTS FOR {variable_name}")
+    print("-" * 32)
+
+    if variable_name in ['y', 'X', 'fitted_values', 'residuals', 'corr_matrix', 'corr_matrix_exog', 'cov_matrix']:
+        if all_rows:
+            print(result.to_string(index=False, header=True, justify="left"))
+        else:
+            print(result.head())
+    else:
+        if isinstance(result, list):
+            for item in result:
+                print(" " * 4, item)
+        else:
+            print(" " * 4, result)
+
+    print()
+    print(f" DESCRIPTION:\n {DESCRIPTIONS[variable_name]}", sep="")
+    print()
+    print(f" CALCULATION:\n {CALCULATIONS[variable_name]}", sep="")
+    print()
+
+
+def print_variables() -> None:
+    """
+    Print a list of all variables available in the results dictionary.
+
+    Parameters
+    ----------
+    results : Dict[str, Any] -- dictionary containing regression results
+    """
+    print("\nVARIABLES:")
+    variable_names = list(DESCRIPTIONS.keys())
+    print(", ".join(variable_names))
+
+
 def included_vars() -> list[list[str]]:
     """
     Utility function that provides a list of variables included in {all_stats}. This function is called by multiple_regr() to create an ordered list of variables in {all_stat}.
@@ -150,6 +238,202 @@ def included_vars() -> list[list[str]]:
     ]
     # fmt: on
     return vars_list
+
+
+def calculation(var: str = "") -> None:
+    """
+    Print a description of how the requested variable was calculated (or obtained).
+
+    Parameters
+    ----------
+    var - str -- a variable name (a key in {CALCULATIONS})
+    Examples
+    --------
+    calculations("x_bar")
+
+    Output --> x_bar: sum(xi))/n or np.mean(x)
+    """
+
+    print()
+
+    if not var:
+        print("Variable name missing.\n")
+        print_vars()
+        print()
+        return None
+
+    if var != "" and var not in CALCULATIONS.keys():
+        if var.lower() not in ["h", "help"]:
+            print(f'"{var}" not found in results.\n')
+        print_vars()
+        print()
+        return None
+
+    for k, v in CALCULATIONS.items():
+        if k != "const":
+            if var:
+                if k == var:
+                    print(k, ": ", v, sep="")
+            else:
+                print(k, ": ", v, sep="")
+
+    return None
+
+
+def description(var: str = "") -> None:
+    """
+    Print a description of a variable (its definition or meaning).
+
+    Parameters
+    ----------
+    var - str -- a variable name (key in {DESCRIPTIONS})
+
+    Examples
+    --------
+    description("x_bar")
+
+    Output --> x_bar: mean of xi; one mean for each X column
+
+    """
+
+    print()
+
+    if not var:
+        print("Variable name missing.\n")
+        print_vars()
+        print()
+        return None
+
+    if var != "" and var not in DESCRIPTIONS.keys():
+        if var.lower() not in ["h", "help"]:
+            print(f'"{var}" not found in results.\n')
+        print_vars()
+        print()
+        return None
+
+    for k, v in DESCRIPTIONS.items():
+        if k != "const":
+            if var:
+                if k == var:
+                    print(k, ": ", v, sep="")
+                    break
+            else:
+                print(k, ": ", v, sep="")
+
+    return None
+
+
+def methods() -> None:
+    """
+    List all exposed methods used in r_linreg module. Submodules include reports. info, and methods.
+    """
+    txt = """
+EXPOSED FUNCTIONS:
+
+    r_linreg:
+        linreg(x, y, const=True)
+            initial function to produce "results" that is required
+            by most other functions
+
+    reports:
+        anova(results)
+            ANOVA table; output directly from
+            statsmodels.stats.anova.anova_lm(model_results)
+        descriptive(results, ci)
+            print a table of descriptive statistics
+            ci is the confidence interval, defaults to 95
+        report(results)
+            one or all variables, quantities, and description
+        summary(results)
+            summary of regression results
+
+    info:
+        calculations(results, "var")
+            source or method of calculation for one variable ("var")
+        definitions(results, "var")
+            definitions for one variable ("var")
+        list_vars(results)
+            print a list of variables returned in "results"
+        methods()
+            a list of all exposed methods
+        usage()
+            notes on linreg() usage
+        var_info(results, var, all_rows=False)
+            all details for one variable ("var")
+            "all_rows": False prints DataFrame head() only
+        pred(results, X: list, ci)
+
+    methods:
+        dummy(df, col_name)
+            returns DataFrame with col_name converted to dummy variables (e.g.,
+            column containing "East", "South", and "West" becomes three columns
+            with those names)
+        encode(df, col_name)
+            returns DataFrame with col_name converted to a categorical
+            variable (0, 1)
+        interaction(df, col_name1, col_name2)
+            returns the DataFrame with a new column that is the interaction
+            between col_name1 and col_name2
+        poly(df, col_name, order)
+            create a new column that is the provided polynomial of a
+            current column.
+        pred(results, X, ci)
+            print predicted y and 95 % confidence interval for submitted X
+            values; ci takes values between 0 and 100, defaults to 95.
+
+"results" is required for most commands.
+"var" is the name of a variable in "results" and must be enclosed in quotes.
+
+report(), var_info(), definitions(), and calculations() offer their own help by
+including "h" or "help" as a second argument after "results".
+"""
+    print(txt)
+
+
+def usage() -> None:
+    """
+    Provide usage help and details for this module.
+    """
+
+    txt = """
+
+USAGE:
+
+    >>> import r_linreg
+    >>> import reports
+    >>> import info
+    >>> import methods
+
+r_linreg returns a dictionary holding all variables and their values. It is the only output from r_linreg. The dictionary can be queried by variable name to get individual results or the reports module can be used.
+
+r_linreg can handle x and y data as pandas Series, pandas.DataFrames or as python lists. DataFrames can have more than one x variable and lists can be 2-dimensional. The y variable can only be a Series or one-dimension list.
+
+Typical usage:
+
+    >>> results = r_linreg.linreg(x, y)
+
+The "results" dictionary has the following key:value format:
+
+    {variable: variable_value}
+
+Access data associated with a variable (quotes required)...
+
+    >>> results['x_bar'] --> [202.95]  (a list is returned that contains the mean for each x variable)
+
+Access a brief description of the variable
+    >>> description['x_bar'] --> 'mean of xi; one mean for each X column'
+
+Access the method used to calculate the variable
+    >>> calculation['x_bar'] --> sum(xi)/n or np.mean(x)
+
+Use print_vars() to see a list of all variables returned in "results". While the list of variables accessible directly from "results" is sizable, it is not exhaustive. The complete RegressionResults returned by statsmodels can be accessed via results['model_results'] and then model_results can be used to access any method or attribute of statsmodels.regression.linear_model.RegressionResults. For more information, see:
+
+https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.RegressionResults.html
+    """
+
+    print(txt)
+
+    return None
 
 
 if __name__ == '__main__':

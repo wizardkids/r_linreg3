@@ -82,11 +82,6 @@ SXX: 530.7823529411756
 SXY: 475.2957058823527
 SYY: 427.76281176470604
     ...
-
-
-    ! Entry point for submission of data (X and y variables).
-    ! Determine if submitted data is valid for multiple linear regression.
-    ! Data are rejected if they don't fit the specified criteria, along with information about how to fix things, if possible
 """
 
 import sys
@@ -345,7 +340,7 @@ def create_model(x_data: pd.DataFrame, y_data: pd.DataFrame, include_constant: b
 
 def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> ODictType[str, Any]:
     """
-    Some computations are done "by hand" [e.g., x_bar is calculated as the X.mean()] and statsmodels is used to conduct conputations where needed. All regression parameters are stored in {all_stats}.
+    Some computations are done "by hand" [e.g., x_bar is calculated as the X.mean()] and statsmodels is used to conduct conputations where needed. All regression parameters, including intermediary calculations (e.g., SXX, SXY) are stored in {all_stats}.
 
     Parameters
     ----------
@@ -467,12 +462,14 @@ def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> ODictType[st
     # "sumxy": "sum(xi * yi)" for each column in X.
     sumxy: list[np.float64] = [(X[col] * y['yi']).sum() for col in col_names]
 
+    # fmt: off
     # "SXX": "sum((xi - x_bar)^2)" for each column in X.
-    SXX: list[np.float64] = [np.sum((X[col] - x_bar[X.columns.get_loc(col)]) ** 2, axis=0) for col in col_names]
+    SXX: list[Any] = [(X[col] - x_bar[i]) ** 2 for i, col in enumerate(X.columns)]
+    SXX: list[np.float64] = [col_sum.sum() for col_sum in SXX]
 
     # "SXY": "sum((xi - x_bar) * (yi - y_bar))" for each column in X.
-    SXY: list[np.float64] = [((X[col] - x_bar[X.columns.get_loc(col)]) *
-                              (y['yi'] - y_bar)).sum() for col in col_names]
+    SXY = [((X[col] - x_bar[i]) * (y['yi'] - y_bar)).sum() for i, col in enumerate(X.columns)]
+    # fmt: on
 
     # standard errors of the parameter estimates.
     SE_coefficients: list[float] = model_results.bse.to_list()
@@ -546,15 +543,15 @@ def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> ODictType[st
             key_list.append(j)
 
     # ! =======================================================================
-    #! The following is for the developer only. It checks that I haven't added a key to {all_data} and forgotten to include it in the list in included_vars() or vice versa.
-    for k in all_data.keys():
-        if k not in key_list:
-            print(f'The key "{k}" from all_data was not found in included_vars().')
-            sys.exit()
-    for k in key_list:
-        if k not in all_data.keys():
-            print(f'The key "{k}" from included_vars() was not found in all_data.')
-            sys.exit()
+    # ! The following is for the developer only. It checks that I haven't added a key to {all_data} and forgotten to include it in the list in included_vars() or vice versa.
+    # ! for k in all_data.keys():
+    # !     if k not in key_list:
+    # !         print(f'The key "{k}" from all_data was not found in included_vars().')
+    # !         sys.exit()
+    # ! for k in key_list:
+    # !     if k not in all_data.keys():
+    # !         print(f'The key "{k}" from included_vars() was not found in all_data.')
+    # !         sys.exit()
     # ! ======================================================================
 
     # Create the ordered dictionary. The reports() function requires that {all_stats} maintains a set order.
@@ -646,24 +643,29 @@ if __name__ == "__main__":
     # ===========================================================
 
     # df: pd.DataFrame = pd.read_csv(
-    #     "c:/Users/rickr/OneDrive/Python on OneDrive/Python Projects/ISL/data/default.csv")
+    #     "c:/Users/rickr/OneDrive/Python on OneDrive/Python Projects/ISL/data/boston.csv")
 
     # df = encode(df, "student")
     # df = encode(df, "default")
+    # print(df.info())
 
-    # x = df.loc[0:, ["balance", "income"]]
-    # y = df.loc[0:, ["default"]]
+    # x = df.loc[0:, ["crim", "indus"]]
+    # y = df.loc[0:, ["medv"]]
 
     results = linreg(x, y, const=True)
 
+    ic(results['x_bar'])
+    ic(results['y_bar'])
+    ic(results['SXX'])
+    ic(results['SXY'])
     # for k, v in results.items():
     #     try:
     #         print(k, type(v[0]), v[0], sep=": ")
     #     except:
     #         print(k, "type not printable", sep=": ")
 
-    for k, v in results.items():
-        print(f'{k}: {v}')
+    # for k, v in results.items():
+    #     print(f'{k}: {v}')
 
     # reports.anova(results)
     # info.definitions(results, "x_bar")
