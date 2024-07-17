@@ -110,21 +110,22 @@ warnings.filterwarnings(action="ignore", module="statsmodels")
 print()
 
 
-def linreg(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.DataFrame, const=True):
-    # -> OrderedDict[str, list | str]:
+def linreg(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.DataFrame, const=True) -> OrderedDict[str, list | str]:
     """
-    This is the entry point for the r_linreg package. linreg() first sends data to validate_data() to reject bad data types and contents. Then x,y are sent to clean_data() to modify x and y, as needed. Finally, regression analysis is performed via multiple_regr().
+    This is the entry point for the r_linreg package. linreg() first sends data to validate_data() to reject bad data types and contents. Then x,y are sent to clean_x_data() and clean_y_data() to modify x and y, as needed. Finally, a model is created and regression analysis is performed via multiple_regr().
 
-    Arguments:
-        x [list], pandas.Series, or pandas.DataFrame -- [int, float, np.int32, np.int64, np.float32, np.float64, '%Y-%m-%d', or datetime]
-        y [list], pandas.Series, or pandas.DataFrame -- [int, float, np.int32, np.int64, np.float32, np.float64, '%Y-%m-%d', or datetime]
-        const [bool] -- default is True; determines whether or not to include a constant in the regression analysis
+    Parameters
+    ----------
+    x : list | pd.Series | pd.DataFrame -- [int, float, np.int32, np.int64, np.float32, np.float64, '%Y-%m-%d', or datetime]
+    y : list | pd.Series | pd.DataFrame -- [int, float, np.int32, np.int64, np.float32, np.float64, '%Y-%m-%d', or datetime]
+    const : bool, optional -- default is True; determines whether or not to include a constant in the regression analysis
+
+    Returns
+    -------
+    OrderedDict[str, list | str] -- dictionary of 52 linear regression statistics either calculated or revealed by statsmodels
 
     Notes:
         - When using a python list for the x variable(s), it is best to use a single dimension list. For lists of more than one dimension, you will have fewer problems if you convert your data to a pandas.DataFrame first. This will ensure that the original list was in the correct (expected) format.
-
-    Returns:
-        all_stats {dict} -- dictionary of 52 linear regression statistics either calculated or revealed by statsmodels.
     """
 
     # If data are not validated, the program will have exited after validate_data().
@@ -151,7 +152,8 @@ def validate_data(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.D
         -- x and y can't be empty
         -- x and y must be of types pandas DataFrame, pandas Series, and/or list
 
-    caveat emptor: x can contain text, but only such text that can be converted using transform.encode() or transform.dummy() functions. If x contains text that can't be thusly converted, the program will generate an error and exit... possibly ungracefully.
+    caveat emptor:
+        x can contain text, but only such text that can be converted using transform.encode() or transform.dummy() functions. If x contains text that can't be thusly converted, the program will generate an error and exit... possibly ungracefully.
     """
 
     # Validate x and y data types as list, Series, or DataFrames
@@ -173,6 +175,21 @@ def validate_data(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.D
 
 
 def clean_x_data(_x: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
+    """
+    A function to clean and format input data _x, which can be a list, pandas Series, or pandas DataFrame, into a standardized pandas DataFrame format.
+    If _x is a DataFrame, resets the index.
+    If _x is a Series, converts it to a DataFrame and resets the index.
+    If _x is a list, converts it to a DataFrame, assigns human-readable column names.
+
+    Parameters
+    ----------
+    _x : list | pd.Series | pd.DataFrame -- Input data that needs to be cleaned and formatted.
+    Returns:
+
+    Returns
+    -------
+    x : pd.DataFrame -- The cleaned and formatted input data in the form of a pandas DataFrame.
+    """
 
     # If x is a DataFrame, we don't need to do anything besides reset the index to integers starting at -0-. drop=True prevents the current index from being added as a column.
     if isinstance(_x, pd.DataFrame):
@@ -198,6 +215,21 @@ def clean_x_data(_x: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
 
 
 def clean_y_data(_y: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
+    """
+    A function to clean and format input data _y, which can be a list, pandas Series, or pandas DataFrame, into a standardized pandas DataFrame format.
+    If _y is a DataFrame, resets the index.
+    If _y is a Series, converts it to a DataFrame and resets the index.
+    If _y is a list, converts it to a DataFrame, assigns human-readable column names.
+
+    Parameters
+    ----------
+    _y : list | pd.Series | pd.DataFrame -- Input data that needs to be cleaned and formatted.
+    Returns:
+
+    Returns
+    -------
+    y : pd.DataFrame -- The cleaned and formatted input data in the form of a pandas DataFrame.
+    """
 
     # If y is a DataFrame, we don't need to do anything besides reset the index to integers starting at -0-. drop=True prevents the current index from being added as a column.
     if isinstance(_y, pd.DataFrame):
@@ -220,12 +252,22 @@ def clean_y_data(_y: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
     return y
 
 
-def final_check(x, y) -> tuple[pd.DataFrame, pd.DataFrame]:
+def final_check(x: pd.DataFrame, y: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     At this point, we should have two DataFrames, one for the x variable(s) and one for the y variable. We need to do some error checking.
-        (1) Are the columns of data either floats or ints?
-        (2) Does y have only one column?
-        (3) Are x and y the same length?
+            (1) Are the columns of data either floats or ints?
+                    If not, attempt conversion from strings to numbers.
+            (2) Does y have only one column?
+            (3) Are x and y the same length?
+
+    Parameters:
+    -------
+        x : pd.DataFrame - Input DataFrames for x values.
+        y : pd.DataFrame - Input DataFrames for y values.
+
+    Returns:
+    -------
+        tuple[pd.DataFrame, pd.DataFrame] - The processed x and y data frames.
     """
 
     # (1) Are the columns of data in x and y either float or int or can they be converted to float or int? Note that columns with numeric strings can be converted to floats.
