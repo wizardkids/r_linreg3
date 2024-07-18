@@ -2,7 +2,11 @@
     Filename: transform.py
       Author: Richard E. Rawson
         Date: 2024-07-16
- Description: This module contains various methods for transforming data in a pandas DataFrame. Each of these methods uses a deepcopy of the provided DataFrame. This way, the original (provided) DataFrame is not modified. It is still possible to modify the original DataFrame by using the returned DataFrame to replace the original one.
+ Description: This module contains various methods for transforming data in a
+ pandas DataFrame. Each of these methods uses a deepcopy of the provided
+ DataFrame. This way, the original (provided) DataFrame is not modified. It is
+ still possible to modify the original DataFrame by using the returned DataFrame
+ to replace the original one.
 """
 
 import sys
@@ -14,7 +18,9 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 def interaction(df: pd.DataFrame, column1: str, column2: str) -> pd.DataFrame:
     """
-    This is a function that takes two df column names and creates a third column that is the interaction between the two.     The new column is named "{column1}*{column2}".
+    This is a function that takes two df column names and creates a third column
+    that is the interaction between the two.     The new column is named
+    "{column1}*{column2}".
 
     Parameters:
     ----------
@@ -41,7 +47,9 @@ def interaction(df: pd.DataFrame, column1: str, column2: str) -> pd.DataFrame:
 
 def poly(df: pd.DataFrame, column: str, order: int) -> pd.DataFrame:
     """
-    Compute a polynomial of a specified order for a specific column in the DataFrame. The new column is named as the original column name followed by the order of the polynomial requested.
+    Compute a polynomial of a specified order for a specific column in the
+    DataFrame. The new column is named as the original column name followed by
+    the order of the polynomial requested.
 
     Parameters
     ----------
@@ -51,7 +59,8 @@ def poly(df: pd.DataFrame, column: str, order: int) -> pd.DataFrame:
 
     Returns
     -------
-    DataFrame -- original DataFrame with one additional column containing the polynomial of the specified order
+    DataFrame -- original DataFrame with one additional column containing the
+    polynomial of the specified order
     """
 
     df_314066: pd.DataFrame = deepcopy(df)
@@ -75,7 +84,8 @@ def poly(df: pd.DataFrame, column: str, order: int) -> pd.DataFrame:
 
 def encode(df: pd.DataFrame, column: str) -> pd.DataFrame:
     """
-    Encode a binary column with 0 and 1. Replace the original column with the encoded column.
+    Encode a binary column with 0 and 1. Replace the original column with the
+    encoded column.
 
     Parameters:
     ----------
@@ -103,11 +113,20 @@ def encode(df: pd.DataFrame, column: str) -> pd.DataFrame:
 
 def dummy(df: pd.DataFrame, column: str) -> pd.DataFrame:
     """
-    This function creates dummy variables for a specified column in a DataFrame as a means of representing categorical data as binary vectors. Two or more columns will be added to encode a single column with more than 2 unique values. The original column will be retained.
+    This function creates dummy variables for a specified column in a DataFrame
+    as a means of representing categorical data as binary vectors. Two or more
+    columns will be added to encode a single column with more than 2 unique
+    values. The original column will be retained.
 
-    This function has limited options for encoding categorical data, but chooses to encode using the most commonly used options. For details, see https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html.
+    This function has limited options for encoding categorical data, but chooses
+    to encode using the most commonly used options. For details, see
+    https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html.
 
-    The "drop" option is not used, meaning that all features will be retained, even if they are not needed for the model. If a column has 4 features (e.g., North, South, East, West), incorporating all of them into a regression model is likely to result in collinearity. Therefore, it is advisable to ignore at least one column when fitting.
+    The "drop" option is not used, meaning that all features will be retained,
+    even if they are not needed for the model. If a column has 4 features (e.g.,
+    North, South, East, West), incorporating all of them into a regression model
+    is likely to result in collinearity. Therefore, it is advisable to ignore at
+    least one column when fitting.
 
     Parameters
     ----------
