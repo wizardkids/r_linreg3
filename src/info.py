@@ -118,7 +118,7 @@ CALCULATIONS: dict[str, str] = {
 }
 
 
-def print_variables() -> None:
+def print_variables(data: OrderedDict[str, Any] = None) -> None:
     """
     Print to the terminal a list of all variables exposed in the "results" dictionary. The list is organized with headings to make it slightly easier to find a particular variable.
     """
@@ -149,7 +149,10 @@ def print_variables() -> None:
                     print("-" * 32)
 
         # Print the variable name.
-        print(k, sep='')
+        if data:
+            print(f'{k}: {data[k]}')
+        else:
+            print(k, sep='')
 
     return None
 
@@ -326,67 +329,66 @@ def description(var: str = "") -> None:
 
 def methods() -> None:
     """
-    List all exposed methods used in r_linreg module. Submodules include reports. info, and methods.
+    List all exposed methods used in r_linreg module. Submodules
+    include reports, info, transform, and ancillary.
     """
     txt = """
 EXPOSED FUNCTIONS:
 
     r_linreg:
         linreg(x, y, const=True)
-            initial function to produce "results" that is required
-            by most other functions
+            initial function to run linear regression analysis.
+            Results are returned as a dictionary.
 
     reports:
         anova(results)
-            ANOVA table; output directly from
-            statsmodels.stats.anova.anova_lm(model_results)
+            ANOVA table;
         descriptive(results, ci)
             print a table of descriptive statistics
             ci is the confidence interval, defaults to 95
-        report(results)
-            one or all variables, quantities, and description
-        summary(results)
-            summary of regression results
+        print_variables(results)
+            - list all variables in regression results;
+            - if results is provided as an argument, each variable
+            is printed with its value
+        OLS_results(results)
+            OLS Regression Results table from statsmodels
 
     info:
-        calculations(results, "var")
+        calculation("var")
             source or method of calculation for one variable ("var")
-        definitions(results, "var")
-            definitions for one variable ("var")
-        list_vars(results)
-            print a list of variables returned in "results"
+        definition("var")
+            definition for one variable ("var")
+        print_variables(results)
+            - list all variables in regression results;
+            - if results is provided as an argument, each variable
+            is printed with its value
         methods()
-            a list of all exposed methods
+            an annotated list of all exposed methods
         usage()
             notes on linreg() usage
         var_info(results, var, all_rows=False)
-            all details for one variable ("var")
-            "all_rows": False prints DataFrame head() only
-        pred(results, X: list, ci)
+            - prints value, definition, and calculation for one
+              variable ("var")
+            - "all_rows": False prints DataFrame head() only
 
-    methods:
-        dummy(df, col_name)
-            returns DataFrame with col_name converted to dummy variables (e.g.,
-            column containing "East", "South", and "West" becomes three columns
-            with those names)
-        encode(df, col_name)
-            returns DataFrame with col_name converted to a categorical
+    ancillary:
+        pred(results, X: list, ci)
+            print predicted y and 95 % confidence interval for
+            provided values of X variable(s)
+
+    transform:
+        dummy(df, column)
+            returns DataFrame with column converted to dummy variables (e.g.,
+            column containing "East", "South", and "West" becomes three columns with those names)
+        encode(df, column)
+            returns DataFrame with a binary column converted to a categorical
             variable (0, 1)
-        interaction(df, col_name1, col_name2)
+        interaction(df, column1, column2)
             returns the DataFrame with a new column that is the interaction
-            between col_name1 and col_name2
-        poly(df, col_name, order)
+            between column1 and column2
+        poly(df, column, order)
             create a new column that is the provided polynomial of a
             current column.
-        pred(results, X, ci)
-            print predicted y and 95 % confidence interval for submitted X
-            values; ci takes values between 0 and 100, defaults to 95.
-
-"results" is required for most commands.
-"var" is the name of a variable in "results" and must be enclosed in quotes.
-
-report(), var_info(), definitions(), and calculations() offer their own help by
-including "h" or "help" as a second argument after "results".
 """
     print(txt)
 

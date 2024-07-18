@@ -40,48 +40,6 @@ STATSMODELS:
 
     See:
     https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.RegressionResults.html#statsmodels.regression.linear_model.RegressionResults
-
-DATA INPUTS:
-    - X: python list, pandas.Series, or pandas.DataFrame -- [int, float]
-    - y: python list, pandas.Series, or pandas.DataFrame -- [int, float]
-
-    - Data (X and y) are examined for validity of format and content, and converted to pandas.DataFrame.
-    - Python lists are converted to pandas.DataFrame before computations are conducted.
-    - For Series and DataFrames, the index is reset to 1 for cases where X or y comprise a subset of the original pandas data.
-    - For multiple regression, with more than one X variable, n-dimensional lists can be used, but for simplicity's sake, use pandas.DataFrames for input. Formatting a multi-dimension list so that rows and columns are what is expected can be challenging, but a DataFrame makes organizing data correctly very easy.
-
-=========== EXAMPLE USAGE =====================================================
-
-# BUG -- the following needs to be edited in light of refactoring.
-
-For details, use usage()
-
-    >>> import r_linreg as linreg
-    >>> import reports
-    >>> import info
-    >>> import methods
-
->>> results = linreg.linreg(X, y)  # X and y, as described above
-
->>> results['r_squared']       # access individual parameters (quotes required)
-0.9949660912754924
-
->>> reports.summary(results)    # print a summary of the regression parameters
-
->>> reports.report(results)     # print all variables and values, computed during analysis
-n: 17
-k: 1
-sumx: 3450.2
-sumx2: 700759.02
-sumxy: 482143.511
-sumy: 2373.3
-sumy2: 331754.4034
-x_bar: 202.95294117647057
-y_bar: 139.6058823529412
-SXX: 530.7823529411756
-SXY: 475.2957058823527
-SYY: 427.76281176470604
-    ...
 """
 
 import sys
@@ -95,7 +53,7 @@ import numpy as np
 import pandas as pd
 import reports
 import transform
-from icecream import ic
+# from icecream import ic
 from patsy import PatsyError
 from statsmodels.formula.api import ols
 from statsmodels.stats.anova import anova_lm
@@ -671,11 +629,13 @@ if __name__ == "__main__":
     #     print(f'{k}: {v}')
 
     # reports.descriptive(results, 90)
-    reports.anova(results)
-    reports.OLS_results(results)
+    # reports.anova(results)
+    # reports.OLS_results(results)
+    # reports.print_variables(results)
 
     # info.var_info(results, "sumx")
     # info.calculation("x_bar")
+    info.calculation("h")
     # info.description("x_bar")
     # info.var_info(results, "sumx")
     # info.print_variables()

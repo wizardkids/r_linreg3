@@ -9,6 +9,7 @@
 
 from typing import OrderedDict, Any
 
+import info
 import pandas as pd
 from statsmodels.stats.descriptivestats import Description
 
@@ -39,6 +40,11 @@ def descriptive(results: OrderedDict[str, Any], ci: int = 95) -> None:
     """
     This function provides a table of descriptive statistics for the regression data. The table includes: nobs, mean, std_err upper_ci, lower_ci, std, coef_var, range, max, min, median
 
+    Parameters
+    ----------
+    results : OrderedDict[str, Any] -- results of linear regression analysis
+    ci : int, optional -- confidence interval level, by default 95
+
     CODENOTE:
         https://www.statsmodels.org/stable/generated/statsmodels.stats.descriptivestats.Description.html#statsmodels.stats.descriptivestats.Description
 
@@ -57,12 +63,6 @@ def descriptive(results: OrderedDict[str, Any], ci: int = 95) -> None:
         Top Categories: The ntop parameter sets the number of top categorical labels to report.
 
         The selectable statistics include common measures like mean, standard deviation, confidence intervals, range, maximum, minimum, median, skewness, kurtosis, and more. It also includes tests for normality like the Jarque-Bera test.
-
-    Parameters
-    ----------
-    results : OrderedDict[str, Any] -- results of linear regression analysis
-
-    ci : int, optional -- confidence interval level, by default 95
     """
 
     # By way of example, a 95% CI has to be converted to an alpha of 0.05
@@ -81,7 +81,7 @@ def descriptive(results: OrderedDict[str, Any], ci: int = 95) -> None:
 
 def anova(results: OrderedDict[str, Any]) -> None:
     """
-    Print a summary table of key results of linear regression and an anova table, courtesy of statsmodels.
+    Print an anova table of key results of linear regression.
 
     Parameters
     ----------
@@ -118,3 +118,17 @@ def anova(results: OrderedDict[str, Any]) -> None:
     print('\n** Type 1 ANOVA: sensitive to the order of variables. \n', sep="")
 
     return None
+
+def print_variables(results: OrderedDict[str, Any]=None) -> None:
+    """
+    Print a list of all variables available in the results dictionary. If "results" is provided as an argument, then the value of each variable computed during linear regression analysis is included. This function is a shortcut to the print_variables() function in the info module, since such a function can serve more than one purpose.
+
+    Parameters
+    ----------
+    results : OrderedDict[str, Any], optional -- results of linear regression analysis, by default None
+    """
+
+    if results:
+        info.print_variables(results)
+    else:
+        info.print_variables()
