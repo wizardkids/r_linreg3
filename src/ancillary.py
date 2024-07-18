@@ -2,7 +2,8 @@
     Filename: ancillary.py
       Author: Richard E. Rawson
         Date: 2024-07-16
- Description: This module contains functions that use the results of linear regression to conduct further analysis.
+ Description: This module contains functions that use the results of linear
+ regression to conduct further analysis.
 
 """
 
@@ -14,17 +15,20 @@ import pandas as pd
 
 def pred(results: OrderedDict[str, Any], x_values: list, ci: int = 95) -> tuple[float, float] | None:
     """
-    Given value(s) for the X variable(s) included in the model, print the predicted y value and a 95% confidence interval.
+    Given value(s) for the X variable(s) included in the model, print the
+    predicted y value and a 95% confidence interval.
 
     Parameters
     ----------
     results : OrderedDict  -- all data from multiple_regr()
-    x_values : list -- list of x values to use for prediction, one element for each X variable
+    x_values : list -- list of x values to use for prediction, one element for
+                       each X variable
     ci : int, optional -- confidence interval, by default 95
 
     Returns
     -------
-    tuple[float, float] -- lower and upper limits of the prediction interval, in that order
+    tuple[float, float] -- lower and upper limits of the prediction interval,
+                           in that order
 
     Example usage
     --------
@@ -39,7 +43,8 @@ def pred(results: OrderedDict[str, Any], x_values: list, ci: int = 95) -> tuple[
     # Get a list of the X variable names used in this model.
     x_variables: list[str] = results["x_variable_names"]
 
-    # If the user has submitted one set of X values, put that list in a list. The for... loop assumes it will get a list of lists.
+    # If the user has submitted one set of X values, put that list in a list.
+    # The for... loop assumes it will get a list of lists.
     if not isinstance(x_values[0], list):
         x_values = [x_values]
     else:
@@ -55,13 +60,17 @@ def pred(results: OrderedDict[str, Any], x_values: list, ci: int = 95) -> tuple[
         for ndx, var in enumerate(iterable=x_variables):
             exog_dict.update({var: val_list[ndx]})
 
-        # Create a DataFrame from the dictionary that contains one column for each X variable and the submitted X value for each variable.
+        # Create a DataFrame from the dictionary that contains one column for
+        # each X variable and the submitted X value for each variable.
         df_new: pd.DataFrame = pd.DataFrame(data=[exog_dict])
 
         # Get the predicted value for the given X value as a pandas Series.
         pred_y = results['model_results'].predict(df_new)
 
-        # Get the prediction interval (used to estimate the range of possible values for a future observation... an individual response) and confidence interval (used to estimate the range of possible values for a population parameter... an average response).
+        # Get the prediction interval (used to estimate the range of possible
+        # values for a future observation... an individual response) and
+        # confidence interval (used to estimate the range of possible values
+        # for a population parameter... an average response).
         pred = results['model_results'].get_prediction(exog=df_new)
 
         pred_df = pred.summary_frame(alpha=alpha)
