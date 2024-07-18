@@ -12,3 +12,5 @@
 *.pyc
 __init__.py
 scratch.py
+/tests/
+tests/test_r_linreg2.py
