@@ -3,7 +3,9 @@
      Version: 3.00
       Author: Richard E. Rawson
         Date: 2024-07-16
- Description: Wrapper for statsmodels linear regression that not only performs regression but makes a long list of intermediary statistics accessible to the user.
+ Description: Wrapper for statsmodels linear regression that not only performs
+ regression but makes a long list of intermediary statistics accessible to the
+ user.
 
      SOURCE:
             Applied Linear Regression, Sandy Weisberg, John Wiley & Sons, 1985
