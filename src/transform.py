@@ -2,14 +2,7 @@
     Filename: transform.py
       Author: Richard E. Rawson
         Date: 2024-07-16
- Description:
-
-    !METHODS FOR MODIFYING X VARIABLES (non-destructive)
-    !    >>> interaction
-    !    >>> poly
-    !    >>> encode
-    !    >>> dummy
-
+ Description: This module contains various methods for transforming data in a pandas DataFrame. Each of these methods uses a deepcopy of the provided DataFrame. This way, the original (provided) DataFrame is not modified. It is still possible to modify the original DataFrame by using the returned DataFrame to replace the original one.
 """
 
 import sys
@@ -34,14 +27,16 @@ def interaction(df: pd.DataFrame, column1: str, column2: str) -> pd.DataFrame:
         pd.DataFrame: The DataFrame with the new column added.
     """
 
-    if column1 not in df.columns or column2 not in df.columns:
+    df_314066: pd.DataFrame = deepcopy(df)
+
+    if column1 not in df_314066.columns or column2 not in df_314066.columns:
         print("One or both columns are not in the DataFrame")
         sys.exit()
 
-    new_column_name = f"{column1}*{column2}"
-    df[new_column_name] = df[column1] * df[column2]
+    new_column_name: str = f"{column1}*{column2}"
+    df_314066[new_column_name] = df_314066[column1] * df_314066[column2]
 
-    return df
+    return df_314066
 
 
 def poly(df: pd.DataFrame, column: str, order: int) -> pd.DataFrame:
@@ -59,22 +54,23 @@ def poly(df: pd.DataFrame, column: str, order: int) -> pd.DataFrame:
     DataFrame -- original DataFrame with one additional column containing the polynomial of the specified order
     """
 
-    if column not in df.columns:
-        print(f"Column {column} not found in DataFrame")
-        sys.exit()
-    if not isinstance(order, int):
-        print('"order" needs to be an integer.')
-        sys.exit()
+    df_314066: pd.DataFrame = deepcopy(df)
+
     if order < 2:
         print('Order of a polynomial must be at least 2.')
         sys.exit()
+    if round(order, 0) != order:
+        print("Order must be an integer.")
+        sys.exit()
 
-    new_column_name: str = f"{column}{order}"
-    df[new_column_name] = df[column]
-    for _ in range(2, order + 1):
-        df[new_column_name] *= df[column]
+    if column not in df_314066.columns:
+        print(f"Column {column} not found in DataFrame")
+        sys.exit()
 
-    return df
+    new_column_name: str = f'{column}{order}'
+    df_314066[new_column_name] = df_314066[column] ** order
+
+    return df_314066
 
 
 def encode(df: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -90,18 +86,19 @@ def encode(df: pd.DataFrame, column: str) -> pd.DataFrame:
     -------
     pd.DataFrame: DataFrame with the encoded column replacing the original column.
     """
-    if df[column].nunique() != 2:
+    df_314066: pd.DataFrame = deepcopy(df)
+    if df_314066[column].nunique() != 2:
         print("Column must have exactly two unique values.")
         sys.exit()
 
-    if column not in df.columns:
+    if column not in df_314066.columns:
         print("Column name not found in DataFrame.")
         sys.exit()
 
     label_encoder = LabelEncoder()
-    df[column] = label_encoder.fit_transform(df[column])
+    df_314066[column] = label_encoder.fit_transform(df_314066[column])
 
-    return df
+    return df_314066
 
 
 def dummy(df: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -134,9 +131,9 @@ def dummy(df: pd.DataFrame, column: str) -> pd.DataFrame:
     encoded_column = encoder.fit_transform(df[[column]])
     encoded_columns = encoder.get_feature_names_out([column])
     encoded_column_df = pd.DataFrame(data=encoded_column, columns=encoded_columns)
-    df = pd.concat([df, encoded_column_df], axis=1)
+    df_314066: pd.DataFrame = pd.concat([df, encoded_column_df], axis=1)
 
-    return df
+    return df_314066
 
 
 if __name__ == '__main__':

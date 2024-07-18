@@ -2,20 +2,18 @@
     Filename: reports.py
       Author: Richard E. Rawson
         Date: 2024-07-16
- Description:
+ Description: This module contains functions that provide multi-line reports of the results of linear regression. These include descriptive statistics [descriptive()], OLS regression results from statsmodels [OLS_results()], and an anova table [anova()].
 
 """
 
 
-from typing import Any
-from typing import OrderedDict as ODictType
+from typing import OrderedDict, Any
 
-import info
 import pandas as pd
 from statsmodels.stats.descriptivestats import Description
 
 
-def anova(results: ODictType[str, Any]) -> None:
+def OLS_results(results: OrderedDict[str, Any]) -> None:
     """
     Print the OLS Regression Results table provided by statsmodels.
 
@@ -28,7 +26,7 @@ def anova(results: ODictType[str, Any]) -> None:
 
     Parameters
     ----------
-    results : ODictType[str, Any] -- dictionary of results from running linear regression analysis
+    results : OrderedDict[str, Any] -- dictionary of results from running linear regression analysis
     """
 
     print()
@@ -37,7 +35,7 @@ def anova(results: ODictType[str, Any]) -> None:
     return None
 
 
-def descriptive(results: ODictType[str, Any], ci: int = 95) -> None:
+def descriptive(results: OrderedDict[str, Any], ci: int = 95) -> None:
     """
     This function provides a table of descriptive statistics for the regression data. The table includes: nobs, mean, std_err upper_ci, lower_ci, std, coef_var, range, max, min, median
 
@@ -62,7 +60,7 @@ def descriptive(results: ODictType[str, Any], ci: int = 95) -> None:
 
     Parameters
     ----------
-    results : ODictType[str, Any] -- results of linear regression analysis
+    results : OrderedDict[str, Any] -- results of linear regression analysis
 
     ci : int, optional -- confidence interval level, by default 95
     """
@@ -81,13 +79,13 @@ def descriptive(results: ODictType[str, Any], ci: int = 95) -> None:
     return None
 
 
-def summary(results: ODictType[str, Any]) -> None:
+def anova(results: OrderedDict[str, Any]) -> None:
     """
     Print a summary table of key results of linear regression and an anova table, courtesy of statsmodels.
 
     Parameters
     ----------
-    results : ODictType[str, Any] -- dictionary of 52 linear regression results from statsmodels and computations.
+    results : OrderedDict[str, Any] -- dictionary of 52 linear regression results from statsmodels and computations.
     """
 
     if results['const']:

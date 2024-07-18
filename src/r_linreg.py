@@ -93,6 +93,8 @@ import ancillary
 import info
 import numpy as np
 import pandas as pd
+import reports
+import transform
 from icecream import ic
 from patsy import PatsyError
 from statsmodels.formula.api import ols
@@ -657,7 +659,7 @@ if __name__ == "__main__":
 
     results: OrderedDict[str, Any] = linreg(x, y, const=True)
 
-    ancillary.pred(results, [200], 95)
+    # ancillary.pred(results, [200], 95)
 
     # for k, v in results.items():
     #     try:
@@ -668,36 +670,38 @@ if __name__ == "__main__":
     # for k, v in results.items():
     #     print(f'{k}: {v}')
 
-    # reports.anova(results)
-    # info.definitions(results, "x_bar")
     # reports.descriptive(results, 90)
-    # info.var_info(results, "sumx")
-    # methods.pred(results, [200], 95)
-    # reports.report(results, section=7)
-    # reports.summary(results)
+    reports.anova(results)
+    reports.OLS_results(results)
 
-    # reports.anova(results)
-    # info.calculations(results, "x_bar")
-    # info.definitions(results, "x_bar")
-    # reports.descriptive(results, 90)
     # info.var_info(results, "sumx")
-    # methods.pred(results, [200], 95)
-    # reports.report(results, section=7)
-    # reports.summary(results)
-    # info.list_vars(results)
+    # info.calculation("x_bar")
+    # info.description("x_bar")
+    # info.var_info(results, "sumx")
+    # info.print_variables()
     # info.methods()
+    # info.usage()
+    # ancillary.pred(results, [200], 95)
+
+    # df: pd.DataFrame = pd.read_csv(
+    #     "c:/Users/rickr/OneDrive/Python on OneDrive/Python Projects/ISL/data/default.csv")
+    # print(df.head())
     # print()
-    # info.usage(results)
+    # dfd = transform.dummy(df, "student")
+    # print(df.head())
+    # print(dfd.head())
+    # print()
+    # dfs = transform.encode(df, "student")
+    # print(df.head())
+    # print(dfs.head())
+    # print()
+    # dfi = transform.interaction(df, "balance", "income")
+    # print(df.head())
+    # print(dfi.head())
+    # print()
+    # dfp = transform.poly(df, "balance", 3)
+    # print(df.head())
+    # print(dfp.head())
+    # print()
 
-    # for k, v in results.items():
-    #     print(k, v)
-
-    # r_utils.print_documentation("methods.py", function_names_only=True)
-    # out = info.list_variables(results)
-
-    # print(out)
-
-    # print(results['corr_matrix'][0])
-
-    # for k, v in results.items():
-    #     print(f'{k}: {v}')
+    pass

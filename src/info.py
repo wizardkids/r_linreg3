@@ -6,8 +6,7 @@
 
 """
 
-from typing import Any
-from typing import OrderedDict as ODictType
+from typing import OrderedDict, Any
 
 DESCRIPTIONS: dict[str, str] = {
     "model_results": "statsmodels model_results; since this variable holds the statsmodels result for model.fit(), any method from statsmodels can be applied to this variable\nExample -- results['model_results'][0].summary()",
@@ -119,7 +118,7 @@ CALCULATIONS: dict[str, str] = {
 }
 
 
-def print_vars() -> None:
+def print_variables() -> None:
     """
     Print to the terminal a list of all variables exposed in the "results" dictionary. The list is organized with headings to make it slightly easier to find a particular variable.
     """
@@ -155,7 +154,7 @@ def print_vars() -> None:
     return None
 
 
-def var_info(results: ODictType[str, Any], variable_name: str = "", all_rows: bool = False) -> None:
+def var_info(results: OrderedDict[str, Any], variable_name: str = "", all_rows: bool = False) -> None:
     """
     Print detailed information about a single variable. This includes the variable name, its value computed for this regression, a description, and the method of calculation or source of the variable's quantity. For variables that hold DataFrames, include an option to print the whole data set or just the first few rows.
 
@@ -202,30 +201,31 @@ def var_info(results: ODictType[str, Any], variable_name: str = "", all_rows: bo
     print()
 
 
-def print_variables() -> None:
-    """
-    Print a list of all variables available in the results dictionary.
+# def print_variables() -> None:
+#     """
+#     Print a list of all variables available in the results dictionary.
 
-    Parameters
-    ----------
-    results : Dict[str, Any] -- dictionary containing regression results
-    """
-    print("\nVARIABLES:")
-    variable_names = list(DESCRIPTIONS.keys())
-    print(", ".join(variable_names))
+#     Parameters
+#     ----------
+#     results : Dict[str, Any] -- dictionary containing regression results
+#     """
+#     print("\nVARIABLES:")
+#     variable_names = list(DESCRIPTIONS.keys())
+#     print(", ".join(variable_names))
 
 
 def included_vars() -> list[list[str]]:
     """
-    Utility function that provides a list of variables included in {all_stats}. This function is called by multiple_regr() to create an ordered list of variables in {all_stat}.
+    Utility function that provides a list of variables included in {all_stats}. This function is not meant to be accessible to the end-user, but is called by multiple_regr() to create an ordered list of variables in {all_stat}.
 
     CODENOTE:
-        [vars_list] should contain all the variables that are included in {all_stats}.
+        [vars_list], below, should contain all the variables that are included in {all_stats} and needs to be updated if {all_stats} is changed.
 
     Returns
     -------
     list[list[str]] -- variables list
     """
+
     # fmt: off
     vars_list: list[list[str]] = [
         ["model_results"],
@@ -242,11 +242,12 @@ def included_vars() -> list[list[str]]:
 
 def calculation(var: str = "") -> None:
     """
-    Print a description of how the requested variable was calculated (or obtained).
+    Print the method by which the requested variable was calculated (or obtained). print_variables() can be used to get a list of available variables in regression results.
 
     Parameters
     ----------
-    var - str -- a variable name (a key in {CALCULATIONS})
+    var : str -- a variable name (a key in {CALCULATIONS})
+
     Examples
     --------
     calculations("x_bar")
@@ -258,14 +259,14 @@ def calculation(var: str = "") -> None:
 
     if not var:
         print("Variable name missing.\n")
-        print_vars()
+        print_variables()
         print()
         return None
 
     if var != "" and var not in CALCULATIONS.keys():
         if var.lower() not in ["h", "help"]:
             print(f'"{var}" not found in results.\n')
-        print_vars()
+        print_variables()
         print()
         return None
 
@@ -282,11 +283,11 @@ def calculation(var: str = "") -> None:
 
 def description(var: str = "") -> None:
     """
-    Print a description of a variable (its definition or meaning).
+    Print a description of a variable (its definition or meaning). print_variables() can be used to get a list of available variables in regression results.
 
     Parameters
     ----------
-    var - str -- a variable name (key in {DESCRIPTIONS})
+    var : str -- a variable name (key in {DESCRIPTIONS})
 
     Examples
     --------
@@ -300,14 +301,14 @@ def description(var: str = "") -> None:
 
     if not var:
         print("Variable name missing.\n")
-        print_vars()
+        print_variables()
         print()
         return None
 
     if var != "" and var not in DESCRIPTIONS.keys():
         if var.lower() not in ["h", "help"]:
             print(f'"{var}" not found in results.\n')
-        print_vars()
+        print_variables()
         print()
         return None
 
