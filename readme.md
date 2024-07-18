@@ -86,8 +86,9 @@ Print description or calculation methods for any variable:</br>
 Print complete information about a variable (computed value, description, calculation method):</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.var_info(results, "x_bar")`</br>
 >**RESULTS FOR x_bar**</br>
->     202.95294117647057</br>
-></br>
+> - - -
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;202.95294117647057</br>
+>
 >**DESCRIPTION:**</br>
 > mean of xi; one mean for each X column
 >
