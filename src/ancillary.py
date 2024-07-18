@@ -17,21 +17,21 @@ from typing import OrderedDict, Any
 import pandas as pd
 
 
-def pred(results: OrderedDict[str, Any], X: list, ci: int = 95) -> tuple[float, float] | None:
+def pred(results: OrderedDict[str, Any], x_values: list, ci: int = 95) -> tuple[float, float] | None:
     """
-    Given values for the X variables included in the model, print the predicted y value and a 95% confidence interval.
+    Given value(s) for the X variable(s) included in the model, print the predicted y value and a 95% confidence interval.
 
     Parameters
     ----------
-    results : dict  -- all data from multiple_regr()
-    X : list -- x values to use for prediction
+    results : OrderedDict  -- all data from multiple_regr()
+    x_values : list -- list of x values to use for prediction, one element for each X variable
     ci : int, optional -- confidence interval, by default 95
 
     Returns
     -------
-    tuple[float, float] -- lower and upper limits of the prediction interval
+    tuple[float, float] -- lower and upper limits of the prediction interval, in that order
 
-    Examples
+    Example usage
     --------
     pred(results, [42], ci=95)
     """
@@ -45,12 +45,12 @@ def pred(results: OrderedDict[str, Any], X: list, ci: int = 95) -> tuple[float, 
     x_variables: list[str] = results["x_variable_names"]
 
     # If the user has submitted one set of X values, put that list in a list. The for... loop assumes it will get a list of lists.
-    if not isinstance(X[0], list):
-        X = [X]
+    if not isinstance(x_values[0], list):
+        x_values = [x_values]
     else:
-        X = deepcopy(X)
+        x_values = deepcopy(x_values)
 
-    for val_list in X:
+    for val_list in x_values:
         if len(x_variables) != len(val_list):
             print(f'X values submitted do not match the model parameters.\nSubmit a list (numbers inside "[ ]", separated by commas) with one value for each of:\n{x_variables}', sep="")
             return None

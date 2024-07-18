@@ -658,6 +658,7 @@ if __name__ == "__main__":
     results: OrderedDict[str, Any] = linreg(x, y, const=True)
 
     ancillary.pred(results, [200], 95)
+
     # for k, v in results.items():
     #     try:
     #         print(k, type(v[0]), v[0], sep=": ")
