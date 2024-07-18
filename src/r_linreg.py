@@ -86,20 +86,33 @@ print()
 
 def linreg(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.DataFrame, const=True) -> OrderedDict[str, Any]:
     """
-    This is the entry point for the r_linreg package. linreg() first sends data to validate_data() to reject bad data types and contents. Then x,y are sent to clean_x_data() and clean_y_data() to modify x and y, as needed. Finally, a model is created and regression analysis is performed via multiple_regr().
+    This is the entry point for the r_linreg package. linreg() first sends data
+    to validate_data() to reject bad data types and contents. Then x,y are sent
+    to clean_x_data() and clean_y_data() to modify x and y, as needed. Finally,
+    a model is created and regression analysis is performed via multiple_regr().
 
     Parameters
     ----------
-    x : list | pd.Series | pd.DataFrame -- [int, float, np.int32, np.int64, np.float32, np.float64, '%Y-%m-%d', or datetime]
-    y : list | pd.Series | pd.DataFrame -- [int, float, np.int32, np.int64, np.float32, np.float64, '%Y-%m-%d', or datetime]
-    const : bool, optional -- default is True; determines whether or not to include a constant in the regression analysis
+    x : list | pd.Series | pd.DataFrame -- [int, float, np.int32, np.int64,
+                                            np.float32, np.float64, '%Y-%m-%d',
+                                            or datetime]
+    y : list | pd.Series | pd.DataFrame -- [int, float, np.int32, np.int64,
+                                            np.float32, np.float64, '%Y-%m-%d',
+                                            or datetime]
+    const : bool, optional -- default is True; determines whether or not to
+                              include a constant in the regression analysis
 
     Returns
     -------
-    OrderedDict[str, list | str] -- dictionary of 52 linear regression statistics either calculated or revealed by statsmodels
+    OrderedDict[str, list | str] -- dictionary of 52 linear regression statistics
+                                    either calculated or revealed by statsmodels
 
     Notes:
-        - When using a python list for the x variable(s), it is best to use a single dimension list. For lists of more than one dimension, you will have fewer problems if you convert your data to a pandas.DataFrame first. This will ensure that the original list was in the correct (expected) format.
+        - When using a python list for the x variable(s), it is best to use a
+        single dimension list. For lists of more than one dimension, you will
+        have fewer problems if you convert your data to a pandas.DataFrame first.
+        This will ensure that the original list was in the correct (expected)
+        format.
     """
 
     # If data are not validated, the program will have exited after validate_data().
@@ -111,7 +124,8 @@ def linreg(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.DataFram
     # Convert y data to pandas DataFrame.
     y = clean_y_data(y)
 
-    # Final check for proper shape and contents of x and y data. If check fail, the program will have exited already.
+    # Final check for proper shape and contents of x and y data. If check fail,
+    # the program will have exited already.
     x, y = final_check(x, y)
 
     all_stats: OrderedDict[str, Any] = multiple_regr(x, y, const)
@@ -127,7 +141,10 @@ def validate_data(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.D
         -- x and y must be of types pandas DataFrame, pandas Series, and/or list
 
     caveat emptor:
-        x can contain text, but only such text that can be converted using transform.encode() or transform.dummy() functions. If x contains text that can't be thusly converted, the program will generate an error and exit... possibly ungracefully.
+        x can contain text, but only such text that can be converted using
+        transform.encode() or transform.dummy() functions. If x contains text
+        that can't be thusly converted, the program will generate an error and
+        exit... possibly ungracefully.
     """
 
     # Validate x and y data types as list, Series, or DataFrames
@@ -150,22 +167,27 @@ def validate_data(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.D
 
 def clean_x_data(_x: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
     """
-    A function to clean and format input data _x, which can be a list, pandas Series, or pandas DataFrame, into a standardized pandas DataFrame format.
+    A function to clean and format input data _x, which can be a list, pandas
+    Series, or pandas DataFrame, into a standardized pandas DataFrame format.
     If _x is a DataFrame, resets the index.
     If _x is a Series, converts it to a DataFrame and resets the index.
-    If _x is a list, converts it to a DataFrame, assigns human-readable column names.
+    If _x is a list, converts it to a DataFrame, assigns human-readable column
+    names.
 
     Parameters
     ----------
-    _x : list | pd.Series | pd.DataFrame -- Input data that needs to be cleaned and formatted.
-    Returns:
+    _x : list | pd.Series | pd.DataFrame -- Input data that needs to be cleaned
+                                            and formatted.
 
     Returns
     -------
-    x : pd.DataFrame -- The cleaned and formatted input data in the form of a pandas DataFrame.
+    x : pd.DataFrame -- The cleaned and formatted input data in the form of a
+                        pandas DataFrame.
     """
 
-    # If x is a DataFrame, we don't need to do anything besides reset the index to integers starting at -0-. drop=True prevents the current index from being added as a column.
+    # If x is a DataFrame, we don't need to do anything besides reset the index
+    # to integers starting at -0-. drop=True prevents the current index from
+    # being added as a column.
     if isinstance(_x, pd.DataFrame):
         x = _x.reset_index(drop=True)
 
@@ -180,7 +202,9 @@ def clean_x_data(_x: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
         # Convert a python n-dimension list to a DataFrame.
         x: pd.DataFrame = pd.DataFrame(_x)
 
-        # Column names in a DataFrame made from a [list] are ints. These are converted to more human-readable strings in the form of x_variable1, x_variable2...
+        # Column names in a DataFrame made from a [list] are ints. These are
+        # converted to more human-readable strings in the form of x_variable1,
+        # x_variable2...
         for old_label in range(len(list(x.columns))):
             new_label: str = f'x_variable{old_label + 1}'
             x: pd.DataFrame = x.rename(columns={old_label: new_label})
@@ -190,22 +214,28 @@ def clean_x_data(_x: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
 
 def clean_y_data(_y: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
     """
-    A function to clean and format input data _y, which can be a list, pandas Series, or pandas DataFrame, into a standardized pandas DataFrame format.
+    A function to clean and format input data _y, which can be a list, pandas
+    Series, or pandas DataFrame, into a standardized pandas DataFrame format.
     If _y is a DataFrame, resets the index.
     If _y is a Series, converts it to a DataFrame and resets the index.
-    If _y is a list, converts it to a DataFrame, assigns human-readable column names.
+    If _y is a list, converts it to a DataFrame, assigns human-readable column
+    names.
 
     Parameters
     ----------
-    _y : list | pd.Series | pd.DataFrame -- Input data that needs to be cleaned and formatted.
+    _y : list | pd.Series | pd.DataFrame -- Input data that needs to be cleaned
+                                            and formatted.
     Returns:
 
     Returns
     -------
-    y : pd.DataFrame -- The cleaned and formatted input data in the form of a pandas DataFrame.
+    y : pd.DataFrame -- The cleaned and formatted input data in the form of a
+                        pandas DataFrame.
     """
 
-    # If y is a DataFrame, we don't need to do anything besides reset the index to integers starting at -0-. drop=True prevents the current index from being added as a column.
+    # If y is a DataFrame, we don't need to do anything besides reset the index
+    # to integers starting at -0-. drop=True prevents the current index from
+    # being added as a column.
     if isinstance(_y, pd.DataFrame):
         y = _y.reset_index(drop=True)
 
@@ -220,7 +250,8 @@ def clean_y_data(_y: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
         # Convert y as a 1-dimension list to a DataFrame.
         y: pd.DataFrame = pd.DataFrame(_y)
 
-        # Column names in a DataFrame made from a [list] are ints. Change the column name to a generic "y"
+        # Column names in a DataFrame made from a [list] are ints. Change the
+        # column name to a generic "y"
         y: pd.DataFrame = y.rename(columns={0: 'y'})
 
     return y
@@ -228,7 +259,8 @@ def clean_y_data(_y: list | pd.Series | pd.DataFrame) -> pd.DataFrame:
 
 def final_check(x: pd.DataFrame, y: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
-    At this point, we should have two DataFrames, one for the x variable(s) and one for the y variable. We need to do some error checking.
+    At this point, we should have two DataFrames, one for the x variable(s) and
+    one for the y variable. We need to do some error checking.
             (1) Are the columns of data either floats or ints?
                     If not, attempt conversion from strings to numbers.
             (2) Does y have only one column?
@@ -244,7 +276,9 @@ def final_check(x: pd.DataFrame, y: pd.DataFrame) -> tuple[pd.DataFrame, pd.Data
         tuple[pd.DataFrame, pd.DataFrame] - The processed x and y data frames.
     """
 
-    # (1) Are the columns of data in x and y either float or int or can they be converted to float or int? Note that columns with numeric strings can be converted to floats.
+    # (1) Are the columns of data in x and y either float or int or can they be
+    # converted to float or int? Note that columns with numeric strings can be
+    # converted to floats.
     try:
         # If x contains > 1 column, all columns will be converted to float64.
         x: pd.DataFrame = x.astype(dtype=np.float64)
@@ -319,7 +353,10 @@ def create_model(x_data: pd.DataFrame, y_data: pd.DataFrame, include_constant: b
 
 def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> OrderedDict[str, Any]:
     """
-    Some computations are done "by hand" [e.g., x_bar is calculated as the X.mean()] and statsmodels is used to conduct conputations where needed. All regression parameters, including intermediary calculations (e.g., SXX, SXY) are stored in {all_stats}.
+    Some computations are done "by hand" [e.g., x_bar is calculated as the
+    X.mean()] and statsmodels is used to conduct conputations where needed.
+    All regression parameters, including intermediary calculations (e.g., SXX,
+    SXY) are stored in {all_stats}.
 
     Parameters
     ----------
@@ -329,7 +366,8 @@ def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> OrderedDict[
 
     Returns
     -------
-    all_stats OrderedDict[str, Any] -- dictionary containing 52 statistical parameters
+    all_stats OrderedDict[str, Any] -- dictionary containing 52 statistical
+                                       parameters
     """
 
     # Preserve the original X and y DataFrames for insertion into {all_stats}.
@@ -349,7 +387,8 @@ def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> OrderedDict[
     all_vars: pd.DataFrame = pd.concat([X, y], axis=1)
     corr_matrix: pd.DataFrame = all_vars.corr()
 
-    # rename_columns() provides generic column headings  to make the following calculations simpler.
+    # rename_columns() provides generic column headings  to make the following
+    # calculations simpler.
     X = rename_columns(X, const)
     y.columns = ["yi"]
 
@@ -387,13 +426,15 @@ def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> OrderedDict[
     # Sum of squared residuals
     RSS: np.float64 = model_results.ssr
 
-    # Average difference between the observed and fitted values: mean squared error of the model or residual mean square
+    # Average difference between the observed and fitted values: mean squared
+    # error of the model or residual mean square
     MSE_residuals: float = model_results.mse_resid
     MSE: float = MSE_residuals
     # Average difference between the observed values and the mean of those values.
     MSE_model: np.float64 = model_results.mse_model
 
-    # MSE_total: The uncentered total sum of squares divided by the number of observations.
+    # MSE_total: The uncentered total sum of squares divided by the number of
+    # observations.
     MSE_total: np.float64 = model_results.mse_total
 
     # SEE: standard error of the estimate; measures variation in the ei's
