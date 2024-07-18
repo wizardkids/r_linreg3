@@ -2,7 +2,10 @@
     Filename: reports.py
       Author: Richard E. Rawson
         Date: 2024-07-16
- Description: This module contains functions that provide multi-line reports of the results of linear regression. These include descriptive statistics [descriptive()], OLS regression results from statsmodels [OLS_results()], and an anova table [anova()].
+ Description: This module contains functions that provide multi-line reports of
+ the results of linear regression. These include descriptive statistics
+ [descriptive()], OLS regression results from statsmodels [OLS_results()], and
+ an anova table [anova()].
 
 """
 
@@ -21,13 +24,18 @@ def OLS_results(results: OrderedDict[str, Any]) -> None:
     NOTES:
         - sm.stats.anova_lm(model, typ=1) is sensitive to the order of variables.
 
-        - sm.stats.anova_lm(model, typ=2) is not sensitive to the order of variables and is usually appropriate for balanced designs or unbalanced designs with orthogonal factors.
+        - sm.stats.anova_lm(model, typ=2) is not sensitive to the order of
+          variables and is usually appropriate for balanced designs or unbalanced
+          designs with orthogonal factors.
 
-        - sm.stats.anova_lm(model, typ=3) is not sensitive to the order of variables and is often used for unbalanced designs or models with interactions.
+        - sm.stats.anova_lm(model, typ=3) is not sensitive to the order of
+          variables and is often used for unbalanced designs or models with
+          interactions.
 
     Parameters
     ----------
-    results : OrderedDict[str, Any] -- dictionary of results from running linear regression analysis
+    results : OrderedDict[str, Any] -- dictionary of results from running linear
+                                       regression analysis
     """
 
     print()
@@ -38,7 +46,9 @@ def OLS_results(results: OrderedDict[str, Any]) -> None:
 
 def descriptive(results: OrderedDict[str, Any], ci: int = 95) -> None:
     """
-    This function provides a table of descriptive statistics for the regression data. The table includes: nobs, mean, std_err upper_ci, lower_ci, std, coef_var, range, max, min, median
+    This function provides a table of descriptive statistics for the regression
+    data. The table includes: nobs, mean, std_err upper_ci, lower_ci, std,
+    coef_var, range, max, min, median
 
     Parameters
     ----------
@@ -48,21 +58,32 @@ def descriptive(results: OrderedDict[str, Any], ci: int = 95) -> None:
     CODENOTE:
         https://www.statsmodels.org/stable/generated/statsmodels.stats.descriptivestats.Description.html#statsmodels.stats.descriptivestats.Description
 
-        The Description class from the statsmodels.stats.descriptivestats module provides extended descriptive statistics for data in a pandas DataFrame.
+        The Description class from the statsmodels.stats.descriptivestats module
+        provides extended descriptive statistics for data in a pandas DataFrame.
 
-        Statistics: The stats parameter allows you to specify a sequence of statistics to compute. If not provided, a full set of statistics is computed.
+        Statistics: The stats parameter allows you to specify a sequence of
+        statistics to compute. If not provided, a full set of statistics is
+        computed.
 
-        Numeric and Categorical Data: It can handle both numeric and categorical data, providing relevant statistics for each.
+        Numeric and Categorical Data: It can handle both numeric and categorical
+        data, providing relevant statistics for each.
 
-        Alpha: The alpha parameter sets the significance level for confidence intervals (default is 0.05 for 95% confidence intervals).
+        Alpha: The alpha parameter sets the significance level for confidence
+        intervals (default is 0.05 for 95% confidence intervals).
 
-        Use T-Distribution: The use_t parameter determines whether to use the Student’s t-distribution to construct confidence intervals.
+        Use T-Distribution: The use_t parameter determines whether to use the
+        Student’s t-distribution to construct confidence intervals.
 
-        Percentiles: You can specify which percentiles to calculate with the percentiles parameter.
+        Percentiles: You can specify which percentiles to calculate with the
+        percentiles parameter.
 
-        Top Categories: The ntop parameter sets the number of top categorical labels to report.
+        Top Categories: The ntop parameter sets the number of top categorical
+        labels to report.
 
-        The selectable statistics include common measures like mean, standard deviation, confidence intervals, range, maximum, minimum, median, skewness, kurtosis, and more. It also includes tests for normality like the Jarque-Bera test.
+        The selectable statistics include common measures like mean, standard
+        deviation, confidence intervals, range, maximum, minimum, median,
+        skewness, kurtosis, and more. It also includes tests for normality like
+        the Jarque-Bera test.
     """
 
     # By way of example, a 95% CI has to be converted to an alpha of 0.05
@@ -85,7 +106,8 @@ def anova(results: OrderedDict[str, Any]) -> None:
 
     Parameters
     ----------
-    results : OrderedDict[str, Any] -- dictionary of 52 linear regression results from statsmodels and computations.
+    results : OrderedDict[str, Any] -- dictionary of 52 linear regression results
+                                       from statsmodels and computations.
     """
 
     if results['const']:
@@ -122,11 +144,16 @@ def anova(results: OrderedDict[str, Any]) -> None:
 
 def print_variables(results: OrderedDict[str, Any]=None) -> None:
     """
-    Print a list of all variables available in the results dictionary. If "results" is provided as an argument, then the value of each variable computed during linear regression analysis is included. This function is a shortcut to the print_variables() function in the info module, since such a function can serve more than one purpose.
+    Print a list of all variables available in the results dictionary. If
+    "results" is provided as an argument, then the value of each variable
+    computed during linear regression analysis is included. This function is a
+    shortcut to the print_variables() function in the info module, since such a
+    function can serve more than one purpose.
 
     Parameters
     ----------
-    results : OrderedDict[str, Any], optional -- results of linear regression analysis, by default None
+    results : OrderedDict[str, Any], optional -- results of linear regression
+                                                 analysis, by default None
     """
 
     if results:
