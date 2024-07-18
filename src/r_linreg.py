@@ -88,8 +88,8 @@ import sys
 import warnings
 from collections import OrderedDict
 from typing import Any
-from typing import OrderedDict as ODictType
 
+import ancillary
 import info
 import numpy as np
 import pandas as pd
@@ -100,12 +100,15 @@ from statsmodels.stats.anova import anova_lm
 from statsmodels.stats.stattools import durbin_watson
 from statsmodels.tools import add_constant
 
+# from typing import OrderedDict as ODictType
+
+
 warnings.filterwarnings(action="ignore", module="statsmodels")
 
 print()
 
 
-def linreg(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.DataFrame, const=True) -> OrderedDict[str, list | str]:
+def linreg(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.DataFrame, const=True) -> OrderedDict[str, Any]:
     """
     This is the entry point for the r_linreg package. linreg() first sends data to validate_data() to reject bad data types and contents. Then x,y are sent to clean_x_data() and clean_y_data() to modify x and y, as needed. Finally, a model is created and regression analysis is performed via multiple_regr().
 
@@ -135,7 +138,7 @@ def linreg(x: list | pd.Series | pd.DataFrame, y: list | pd.Series | pd.DataFram
     # Final check for proper shape and contents of x and y data. If check fail, the program will have exited already.
     x, y = final_check(x, y)
 
-    all_stats: ODictType[str, Any] = multiple_regr(x, y, const)
+    all_stats: OrderedDict[str, Any] = multiple_regr(x, y, const)
 
     return all_stats
     # return None
@@ -338,7 +341,7 @@ def create_model(x_data: pd.DataFrame, y_data: pd.DataFrame, include_constant: b
     return model.fit()
 
 
-def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> ODictType[str, Any]:
+def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> OrderedDict[str, Any]:
     """
     Some computations are done "by hand" [e.g., x_bar is calculated as the X.mean()] and statsmodels is used to conduct conputations where needed. All regression parameters, including intermediary calculations (e.g., SXX, SXY) are stored in {all_stats}.
 
@@ -350,7 +353,7 @@ def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> ODictType[st
 
     Returns
     -------
-    all_stats ODictType[str, Any] -- dictionary containing 52 statistical parameters
+    all_stats OrderedDict[str, Any] -- dictionary containing 52 statistical parameters
     """
 
     # Preserve the original X and y DataFrames for insertion into {all_stats}.
@@ -555,7 +558,7 @@ def multiple_regr(X: pd.DataFrame, y: pd.DataFrame, const: bool) -> ODictType[st
     # ! ======================================================================
 
     # Create the ordered dictionary. The reports() function requires that {all_stats} maintains a set order.
-    all_stats: ODictType[str, Any] = OrderedDict((k, all_data[k]) for k in key_list)
+    all_stats: OrderedDict[str, Any] = OrderedDict((k, all_data[k]) for k in key_list)
 
     return all_stats
 
@@ -652,12 +655,9 @@ if __name__ == "__main__":
     # x = df.loc[0:, ["crim", "indus"]]
     # y = df.loc[0:, ["medv"]]
 
-    results = linreg(x, y, const=True)
+    results: OrderedDict[str, Any] = linreg(x, y, const=True)
 
-    ic(results['x_bar'])
-    ic(results['y_bar'])
-    ic(results['SXX'])
-    ic(results['SXY'])
+    ancillary.pred(results, [200], 95)
     # for k, v in results.items():
     #     try:
     #         print(k, type(v[0]), v[0], sep=": ")
