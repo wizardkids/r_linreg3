@@ -1,6 +1,6 @@
 # r_linreg
 
-This program is a wrapper for linear regression performed by the [statsmodels package](https://www.statsmodels.org/stable/index.html). In addition to returning a regression model, the program can report virtually every intermediary and end result of that computation. The program uses statsmodels for simple or multiple linear regression analysis, but the user does not need to know how to use that package. Instead, the main function, linreg() takes two parameters, X and y, and computes everything most users would care to know, and more.
+This program is a wrapper for linear regression performed by the [statsmodels package](https://www.statsmodels.org/stable/index.html). In addition to returning a regression model, the program can report virtually every intermediary and end result of that computation. The program uses statsmodels for simple or multiple linear regression analysis, but the user does not need to know how to use that package. Instead, the main function, linreg(), takes two parameters, X and y, and computes everything most users would care to know, and more.
 
 The purpose of this module is not speed or versatility. The goals are very restricted and are:
 
@@ -12,7 +12,7 @@ The purpose of this module is not speed or versatility. The goals are very restr
 - **X**: python list, pandas.Series, or pandas.DataFrame
 - **y**: python list, pandas.Series, or pandas.DataFrame
 
-Data (X and y) are examined for validity of format and content. Python lists and pandas.Series are converted to pandas.DataFrame before computations are conducted. For Series and DataFrames, the index is reset to 1 for cases where X or y comprise a subset of the original pandas data.
+X and y are two separate data structures (e.g., 2 lists or 2 DataFrames). Data (X and y) are examined for validity of format and content. Python list and pandas.Series are converted to a pandas.DataFrame before computations are conducted. The index for DataFrames is reset to 1 for cases where X or y comprise a subset of the original pandas data.
 
 For multiple regression, with more than one X variable, n-dimensional lists _can_ be used, but for simplicity's sake, use pandas.DataFrames for input. Formatting a multi-dimension list so that rows and columns are what is expected can be challenging, but a DataFrame makes organizing data correctly very easy.
 
@@ -27,12 +27,9 @@ For details, use info.usage() or info.methods()
 &nbsp;&nbsp;&nbsp;&nbsp;`>>> import r_linreg`
 
 As needed...<br>
-&nbsp;&nbsp;&nbsp;&nbsp;`>>> import info`<br>
-&nbsp;&nbsp;&nbsp;&nbsp;`>>> import reports`<br>
-&nbsp;&nbsp;&nbsp;&nbsp;`>>> import ancillary`<br>
-&nbsp;&nbsp;&nbsp;&nbsp;`>>> import transform`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`>>> import info, reports, transform, ancillary`<br>
 
-Linear regression with X and y, as described above. linreg() returns a dictionary containing all intermediary and end results of linear regression.<br>
+linreg() returns a dictionary containing all intermediary and end results of linear regression.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;`>>> results = r_linreg.linreg(X, y)`
 
 Access individual parameters (quotes required)<br>
@@ -62,8 +59,25 @@ Print the entire output of linear regression as an organized list.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;SYY: 427.76281176470604<br>
 &nbsp;&nbsp;&nbsp;&nbsp;. . .
 
+Print description or calculation methods for any variable:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`info.description("x_bar")` --> mean of xi; one mean for each X column</br>
+&nbsp;&nbsp;&nbsp;&nbsp;`info.calculation("x_bar")` --> sum(xi)/n or np.mean(x)
+
+Print complete information about a variable (computed value, description, calculation method):</br>
+&nbsp;&nbsp;&nbsp;&nbsp;`info.var_info(results, "x_bar")`</br>
+>**RESULTS FOR x_bar**</br>
+>     202.95294117647057<br>
+></br>
+>**DESCRIPTION:**</br>
+> mean of xi; one mean for each X column
+>
+>
+>**CALCULATION:**</br>
+> sum(xi)/n or np.mean(x)
+
 ## Files
-- `r_linreg.py`: entry point for linear regression analysis
+- `r_linreg.py`: entry point for linear regression analysis;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all calculations returned as a dictionary
 - `info.py`: help information about usage, methods, and regression variables
 - `reports.py`: formatted reporting of regression results
 - `transform.py`: methods for transforming columns of data in pandas DataFrames

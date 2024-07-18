@@ -60,9 +60,6 @@ from statsmodels.stats.anova import anova_lm
 from statsmodels.stats.stattools import durbin_watson
 from statsmodels.tools import add_constant
 
-# from typing import OrderedDict as ODictType
-
-
 warnings.filterwarnings(action="ignore", module="statsmodels")
 
 print()
@@ -635,10 +632,10 @@ if __name__ == "__main__":
 
     # info.var_info(results, "sumx")
     # info.calculation("x_bar")
-    info.calculation("h")
     # info.description("x_bar")
-    # info.var_info(results, "sumx")
-    # info.print_variables()
+    # info.description("x_bar")
+    info.var_info(results, "x_bar")
+    # info.print_variables(results)
     # info.methods()
     # info.usage()
     # ancillary.pred(results, [200], 95)

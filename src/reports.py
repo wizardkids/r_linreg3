@@ -119,6 +119,7 @@ def anova(results: OrderedDict[str, Any]) -> None:
 
     return None
 
+
 def print_variables(results: OrderedDict[str, Any]=None) -> None:
     """
     Print a list of all variables available in the results dictionary. If "results" is provided as an argument, then the value of each variable computed during linear regression analysis is included. This function is a shortcut to the print_variables() function in the info module, since such a function can serve more than one purpose.
