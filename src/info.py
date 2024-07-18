@@ -2,8 +2,8 @@
     Filename: info.py
       Author: Richard E. Rawson
         Date: 2024-07-16
- Description:
-
+ Description: This module contains functions that provide information or help
+ to the user.
 """
 
 from typing import OrderedDict, Any
@@ -120,7 +120,9 @@ CALCULATIONS: dict[str, str] = {
 
 def print_variables(data: OrderedDict[str, Any] = None) -> None:
     """
-    Print to the terminal a list of all variables exposed in the "results" dictionary. The list is organized with headings to make it slightly easier to find a particular variable.
+    Print to the terminal a list of all variables exposed in the "results"
+    dictionary. The list is organized with headings to make it slightly easier
+    to find a particular variable.
     """
 
     section = 0
@@ -159,13 +161,19 @@ def print_variables(data: OrderedDict[str, Any] = None) -> None:
 
 def var_info(results: OrderedDict[str, Any], variable_name: str = "", all_rows: bool = False) -> None:
     """
-    Print detailed information about a single variable. This includes the variable name, its value computed for this regression, a description, and the method of calculation or source of the variable's quantity. For variables that hold DataFrames, include an option to print the whole data set or just the first few rows.
+    Print detailed information about a single variable. This includes the
+    variable name, its value computed for this regression, a description, and
+    the method of calculation or source of the variable's quantity. For variables
+    that hold DataFrames, include an option to print the whole data set or just
+    the first few rows.
 
     Parameters
     ----------
     results : Dict[str, Any] -- results of linear regression
-    variable_name : str, optional -- name of the variable to get information about, by default ""
-    print_all_rows : bool, optional -- if True, print all rows for variables that are dataframes, by default False
+    variable_name : str, optional -- name of the variable to get information
+                                     about, by default ""
+    print_all_rows : bool, optional -- if True, print all rows for variables
+                                       that are dataframes, by default False
     """
 
     if variable_name == "":
@@ -204,25 +212,15 @@ def var_info(results: OrderedDict[str, Any], variable_name: str = "", all_rows: 
     print()
 
 
-# def print_variables() -> None:
-#     """
-#     Print a list of all variables available in the results dictionary.
-
-#     Parameters
-#     ----------
-#     results : Dict[str, Any] -- dictionary containing regression results
-#     """
-#     print("\nVARIABLES:")
-#     variable_names = list(DESCRIPTIONS.keys())
-#     print(", ".join(variable_names))
-
-
 def included_vars() -> list[list[str]]:
     """
-    Utility function that provides a list of variables included in {all_stats}. This function is not meant to be accessible to the end-user, but is called by multiple_regr() to create an ordered list of variables in {all_stat}.
+    Utility function that provides a list of variables included in {all_stats}.
+    This function is not meant to be accessible to the end-user, but is called
+    by multiple_regr() to create an ordered list of variables in {all_stat}.
 
     CODENOTE:
-        [vars_list], below, should contain all the variables that are included in {all_stats} and needs to be updated if {all_stats} is changed.
+        [vars_list], below, should contain all the variables that are included
+        in {all_stats} and needs to be updated if {all_stats} is changed.
 
     Returns
     -------
@@ -245,7 +243,9 @@ def included_vars() -> list[list[str]]:
 
 def calculation(var: str = "") -> None:
     """
-    Print the method by which the requested variable was calculated (or obtained). print_variables() can be used to get a list of available variables in regression results.
+    Print the method by which the requested variable was calculated (or obtained).
+    print_variables() can be used to get a list of available variables in
+    regression results.
 
     Parameters
     ----------
@@ -286,7 +286,9 @@ def calculation(var: str = "") -> None:
 
 def description(var: str = "") -> None:
     """
-    Print a description of a variable (its definition or meaning). print_variables() can be used to get a list of available variables in regression results.
+    Print a description of a variable (its definition or meaning).
+    print_variables() can be used to get a list of available variables
+    in regression results.
 
     Parameters
     ----------
@@ -329,8 +331,8 @@ def description(var: str = "") -> None:
 
 def methods() -> None:
     """
-    List all exposed methods used in r_linreg module. Submodules
-    include reports, info, transform, and ancillary.
+    List all exposed methods used in r_linreg module. Submodules include
+    reports, info, transform, and ancillary.
     """
     txt = """
 EXPOSED FUNCTIONS:
@@ -379,7 +381,8 @@ EXPOSED FUNCTIONS:
     transform:
         dummy(df, column)
             returns DataFrame with column converted to dummy variables (e.g.,
-            column containing "East", "South", and "West" becomes three columns with those names)
+            column containing "East", "South", and "West" becomes three columns
+            with those names)
         encode(df, column)
             returns DataFrame with a binary column converted to a categorical
             variable (0, 1)
@@ -407,9 +410,13 @@ USAGE:
     >>> import info
     >>> import methods
 
-r_linreg returns a dictionary holding all variables and their values. It is the only output from r_linreg. The dictionary can be queried by variable name to get individual results or the reports module can be used.
+r_linreg returns a dictionary holding all variables and their values. It is the
+only output from r_linreg. The dictionary can be queried by variable name to
+get individual results or the reports module can be used.
 
-r_linreg can handle x and y data as pandas Series, pandas.DataFrames or as python lists. DataFrames can have more than one x variable and lists can be 2-dimensional. The y variable can only be a Series or one-dimension list.
+r_linreg can handle x and y data as pandas Series, pandas.DataFrames or as python
+lists. DataFrames can have more than one x variable and lists can be
+2-dimensional. The y variable can only be a Series or one-dimension list.
 
 Typical usage:
 
@@ -421,7 +428,8 @@ The "results" dictionary has the following key:value format:
 
 Access data associated with a variable (quotes required)...
 
-    >>> results['x_bar'] --> [202.95]  (a list is returned that contains the mean for each x variable)
+    >>> results['x_bar'] --> [202.95]  (a list is returned that contains the
+                                        mean for each x variable)
 
 Access a brief description of the variable
     >>> description['x_bar'] --> 'mean of xi; one mean for each X column'
@@ -429,8 +437,14 @@ Access a brief description of the variable
 Access the method used to calculate the variable
     >>> calculation['x_bar'] --> sum(xi)/n or np.mean(x)
 
-Use print_vars() to see a list of all variables returned in "results". While the list of variables accessible directly from "results" is sizable, it is not exhaustive. The complete RegressionResults returned by statsmodels can be accessed via results['model_results'] and then model_results can be used to access any method or attribute of statsmodels.regression.linear_model.RegressionResults. For more information, see:
+Use print_vars() to see a list of all variables returned in "results". While the
+list of variables accessible directly from "results" is sizable, it is not
+exhaustive. The complete RegressionResults returned by statsmodels can be
+accessed via results['model_results'] and then model_results can be used to
+access any method or attribute of
+statsmodels.regression.linear_model.RegressionResults.
 
+For more information, see:
 https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.RegressionResults.html
     """
 
