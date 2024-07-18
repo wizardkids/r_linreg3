@@ -26,47 +26,51 @@ For details, use info.usage() or info.methods()
 
 &nbsp;&nbsp;&nbsp;&nbsp;`>>> import r_linreg`
 
-As needed...<br>
-&nbsp;&nbsp;&nbsp;&nbsp;`>>> import info, reports, transform, ancillary`<br>
+Submodules can be imported separately...</br>
+&nbsp;&nbsp;&nbsp;&nbsp;`>>> import info, reports, transform, ancillary`
 
-linreg() returns a dictionary containing all intermediary and end results of linear regression.<br>
+However, r_linreg.py imports all of the submodules, so the following lines of code are equivalent:</br>
+&nbsp;&nbsp;&nbsp;&nbsp;`>>>info.calculation("x_bar")`</br>
+&nbsp;&nbsp;&nbsp;&nbsp;`>>>r_linreg.info.calculation("x_bar")`
+
+linreg() returns a dictionary containing all intermediary and end results of linear regression.</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`>>> results = r_linreg.linreg(X, y)`
 
-Access individual parameters (quotes required)<br>
+Access individual parameters (quotes required)</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`>>> results['r_squared']` --> 0.9949660912754924
 
-Print an anova table containing regression parameters.<br>
+Print an anova table containing regression parameters.</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`reports.anova(results)`
 
-Print all variables accessible to the user as an organized list.<br>
+Print all variables accessible to the user as an organized list.</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.print_variables()`
 
-Print the entire output of linear regression as an organized list.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;`reports.print_variables(results)` **OR**<br>
+Print the entire output of linear regression as an organized list.</br>
+&nbsp;&nbsp;&nbsp;&nbsp;`reports.print_variables(results)` **OR**</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.print_variables(results)`
 
->&nbsp;&nbsp;&nbsp;&nbsp;n: 17<br>
-&nbsp;&nbsp;&nbsp;&nbsp;k: 1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumx: 3450.2<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumx2: 700759.02<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumxy: 482143.511<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumy: 2373.3<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumy2: 331754.4034<br>
-&nbsp;&nbsp;&nbsp;&nbsp;x_bar: 202.95294117647057<br>
-&nbsp;&nbsp;&nbsp;&nbsp;y_bar: 139.6058823529412<br>
-&nbsp;&nbsp;&nbsp;&nbsp;SXX: 530.7823529411756<br>
-&nbsp;&nbsp;&nbsp;&nbsp;SXY: 475.2957058823527<br>
-&nbsp;&nbsp;&nbsp;&nbsp;SYY: 427.76281176470604<br>
+>&nbsp;&nbsp;&nbsp;&nbsp;n: 17</br>
+&nbsp;&nbsp;&nbsp;&nbsp;k: 1</br>
+&nbsp;&nbsp;&nbsp;&nbsp;sumx: 3450.2</br>
+&nbsp;&nbsp;&nbsp;&nbsp;sumx2: 700759.02</br>
+&nbsp;&nbsp;&nbsp;&nbsp;sumxy: 482143.511</br>
+&nbsp;&nbsp;&nbsp;&nbsp;sumy: 2373.3</br>
+&nbsp;&nbsp;&nbsp;&nbsp;sumy2: 331754.4034</br>
+&nbsp;&nbsp;&nbsp;&nbsp;x_bar: 202.95294117647057</br>
+&nbsp;&nbsp;&nbsp;&nbsp;y_bar: 139.6058823529412</br>
+&nbsp;&nbsp;&nbsp;&nbsp;SXX: 530.7823529411756</br>
+&nbsp;&nbsp;&nbsp;&nbsp;SXY: 475.2957058823527</br>
+&nbsp;&nbsp;&nbsp;&nbsp;SYY: 427.76281176470604</br>
 &nbsp;&nbsp;&nbsp;&nbsp;. . .
 
-Print description or calculation methods for any variable:<br>
+Print description or calculation methods for any variable:</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.description("x_bar")` --> mean of xi; one mean for each X column</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.calculation("x_bar")` --> sum(xi)/n or np.mean(x)
 
 Print complete information about a variable (computed value, description, calculation method):</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.var_info(results, "x_bar")`</br>
 >**RESULTS FOR x_bar**</br>
->     202.95294117647057<br>
+>     202.95294117647057</br>
 ></br>
 >**DESCRIPTION:**</br>
 > mean of xi; one mean for each X column
@@ -76,7 +80,7 @@ Print complete information about a variable (computed value, description, calcul
 > sum(xi)/n or np.mean(x)
 
 ## Files
-- `r_linreg.py`: entry point for linear regression analysis;<br>
+- `r_linreg.py`: entry point for linear regression analysis;</br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all calculations returned as a dictionary
 - `info.py`: help information about usage, methods, and regression variables
 - `reports.py`: formatted reporting of regression results
