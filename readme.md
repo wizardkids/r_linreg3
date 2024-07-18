@@ -49,19 +49,35 @@ Print the entire output of linear regression as an organized list.</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`reports.print_variables(results)` **OR**</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.print_variables(results)`
 
->&nbsp;&nbsp;&nbsp;&nbsp;n: 17</br>
-&nbsp;&nbsp;&nbsp;&nbsp;k: 1</br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumx: 3450.2</br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumx2: 700759.02</br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumxy: 482143.511</br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumy: 2373.3</br>
-&nbsp;&nbsp;&nbsp;&nbsp;sumy2: 331754.4034</br>
-&nbsp;&nbsp;&nbsp;&nbsp;x_bar: 202.95294117647057</br>
-&nbsp;&nbsp;&nbsp;&nbsp;y_bar: 139.6058823529412</br>
-&nbsp;&nbsp;&nbsp;&nbsp;SXX: 530.7823529411756</br>
-&nbsp;&nbsp;&nbsp;&nbsp;SXY: 475.2957058823527</br>
-&nbsp;&nbsp;&nbsp;&nbsp;SYY: 427.76281176470604</br>
-&nbsp;&nbsp;&nbsp;&nbsp;. . .
+>**DATA**
+>- - -
+>x_variable_names: ['BoilPT']</br>
+>y_variable_name: LogPress</br>
+>n: 17.0</br>
+>y:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yi</br>
+>0&nbsp;&nbsp;&nbsp;&nbsp;131.79</br>
+>1&nbsp;&nbsp;&nbsp;&nbsp;131.79</br>
+>2&nbsp;&nbsp;&nbsp;&nbsp;135.02</br>
+>3&nbsp;&nbsp;&nbsp;&nbsp;135.55 . . . </br>
+></br>
+>X:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BoilPT</br>
+>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;194.5</br>
+>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;194.3</br>
+>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;198.4 . . . </br>
+></br>
+>**UNDERLYING STATISTICS**
+>- - -
+>sumx: [3450.2]</br>
+>sumy: 2373.3</br>
+>sumxy: [482143.511]</br>
+>sumx2: [700759.0199999999]</br>
+>sumy2: 331754.4034</br>
+>x_bar: [202.95294117647057]</br>
+>y_bar: 139.6058823529412</br>
+>SXX: [530.7823529411756]</br>
+>SYY: 427.762811764706</br>
+>SXY: [475.29570588235265]</br>
+>. . .</br>
 
 Print description or calculation methods for any variable:</br>
 &nbsp;&nbsp;&nbsp;&nbsp;`info.description("x_bar")` --> mean of xi; one mean for each X column</br>
