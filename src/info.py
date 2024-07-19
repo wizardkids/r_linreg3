@@ -177,13 +177,15 @@ def var_info(results: OrderedDict[str, Any], variable_name: str = "", all_rows: 
     """
 
     if variable_name == "":
-        print("Variable name missing.")
+        print("\nVariable name missing as an argument.")
+        a = input("Printing list of all variables...<ENTER> to continue...")
         print_variables()
         print()
         return
 
     if variable_name not in results:
-        print(f'"{variable_name}" not found in results.')
+        print(f'\n"{variable_name}" not found in results.')
+        a = input("Printing list of all variables...<ENTER> to continue...")
         print_variables()
         print()
         return
@@ -335,7 +337,7 @@ def methods() -> None:
     reports, info, transform, and ancillary.
     """
     txt = """
-EXPOSED FUNCTIONS:
+EXPOSED FUNCTIONS (by module):
 
     r_linreg:
         linreg(x, y, const=True)
@@ -350,20 +352,20 @@ EXPOSED FUNCTIONS:
             ci is the confidence interval, defaults to 95
         print_variables(results)
             - list all variables in regression results;
-            - if results is provided as an argument, each variable
-            is printed with its value
+            - including results is optional; if results is provided
+              as an argument, each variable is printed with its value
         OLS_results(results)
             OLS Regression Results table from statsmodels
 
     info:
         calculation("var")
             source or method of calculation for one variable ("var")
-        definition("var")
-            definition for one variable ("var")
+        description("var")
+            description or definition for one variable ("var")
         print_variables(results)
             - list all variables in regression results;
-            - if results is provided as an argument, each variable
-            is printed with its value
+            - including results is optional; if results is provided as an
+              argument, each variable is printed with its value
         methods()
             an annotated list of all exposed methods
         usage()
@@ -371,6 +373,7 @@ EXPOSED FUNCTIONS:
         var_info(results, var, all_rows=False)
             - prints value, definition, and calculation for one
               variable ("var")
+            - if "var" is omitted, print a list of all variables
             - "all_rows": False prints DataFrame head() only
 
     ancillary:
@@ -380,18 +383,18 @@ EXPOSED FUNCTIONS:
 
     transform:
         dummy(df, column)
-            returns DataFrame with column converted to dummy variables (e.g.,
+            returns DataFrame with "column" converted to dummy variables (e.g.,
             column containing "East", "South", and "West" becomes three columns
             with those names)
         encode(df, column)
-            returns DataFrame with a binary column converted to a categorical
+            returns DataFrame with a binary "column" converted to a categorical
             variable (0, 1)
         interaction(df, column1, column2)
             returns the DataFrame with a new column that is the interaction
-            between column1 and column2
+            between "column1" and "column2"
         poly(df, column, order)
-            create a new column that is the provided polynomial of a
-            current column.
+            create a new column that is the provided polynomial ("order")of a
+            current "column".
 """
     print(txt)
 
