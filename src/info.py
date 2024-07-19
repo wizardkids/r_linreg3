@@ -410,12 +410,14 @@ USAGE:
     >>> import info
     >>> import methods
 
-r_linreg returns a dictionary holding all variables and their values. It is the
-only output from r_linreg. The dictionary can be queried by variable name to
-get individual results or the reports module can be used.
+The principal function in r_linreg.py is linreg(). This function takes x and y
+data, runs a linear regression analysis, and returns a dictionary holding all
+variables and their values. It is the only output from linreg(). The dictionary
+can be queried by variable name to get individual results. The reports module
+includes functions that prints tables of information, such as anova tables.
 
-r_linreg can handle x and y data as pandas Series, pandas.DataFrames or as python
-lists. DataFrames can have more than one x variable and lists can be
+linreg() can handle x and y data as pandas Series, pandas.DataFrames or as
+python lists. DataFrames can have more than one x variable and lists can be
 2-dimensional. The y variable can only be a Series or one-dimension list.
 
 Typical usage:
@@ -431,21 +433,22 @@ Access data associated with a variable (quotes required)...
     >>> results['x_bar'] --> [202.95]  (a list is returned that contains the
                                         mean for each x variable)
 
-Access a brief description of the variable
+Access a brief description of the variable...
     >>> description['x_bar'] --> 'mean of xi; one mean for each X column'
 
 Access the method used to calculate the variable
     >>> calculation['x_bar'] --> sum(xi)/n or np.mean(x)
 
-Use print_vars() to see a list of all variables returned in "results". While the
-list of variables accessible directly from "results" is sizable, it is not
-exhaustive. The complete RegressionResults returned by statsmodels can be
-accessed via results['model_results'] and then model_results can be used to
+Use print_variables() to see a list of all variables returned in "results".
+While more than 50 variables are returned in the regression results, that list
+is not exhaustive. Access to RegressionResults returned by statsmodels is
+granted via results['model_results'] and then "model_results" can be used to
 access any method or attribute of
 statsmodels.regression.linear_model.RegressionResults.
 
 For more information, see:
-https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.RegressionResults.html
+https://www.statsmodels.org/dev/generated/statsmodels.regression.
+linear_model.RegressionResults.html
     """
 
     print(txt)
